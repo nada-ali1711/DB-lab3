@@ -23,7 +23,7 @@ insert into book_authors values (5, "Isaac Asimov");
 insert into book_authors values (6, "Markus Zusak");
 insert into book_authors values (7, "Isaac Asimov");
 
-insert into library_branch values (0, "Sharptown", "Baker st.");
+insert into library_branch values (0, "Sharpstown", "Baker st.");
 insert into library_branch values (1, "Central", "Bleak st.");
 insert into library_branch values (2, "Torus", "Houston st.");
 
