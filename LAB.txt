@@ -1,0 +1,271 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema SAMPLEX
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema SAMPLEX
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `SAMPLEX` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+-- -----------------------------------------------------
+-- Schema SAMPLEx
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema SAMPLEx
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `SAMPLEx` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `SAMPLEX` ;
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`PUBLISHER`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`PUBLISHER` (
+  `Name` VARCHAR(20) NOT NULL,
+  `Address` VARCHAR(50) NULL DEFAULT NULL,
+  `Phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`Name`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`BOOK`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`BOOK` (
+  `BookId` INT NOT NULL,
+  `Title` VARCHAR(20) NOT NULL,
+  `PublisherName` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`BookId`),
+  INDEX `BOOKfk` (`PublisherName` ASC) VISIBLE,
+  CONSTRAINT `BOOKfk`
+    FOREIGN KEY (`PublisherName`)
+    REFERENCES `SAMPLEX`.`PUBLISHER` (`Name`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`BOOK_AUTHORS`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`BOOK_AUTHORS` (
+  `BookId` INT NULL DEFAULT NULL,
+  `AuthorName` VARCHAR(20) NOT NULL,
+  INDEX `AUTHfk` (`BookId` ASC) VISIBLE,
+  CONSTRAINT `AUTHfk`
+    FOREIGN KEY (`BookId`)
+    REFERENCES `SAMPLEX`.`BOOK` (`BookId`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`LIBRARY_BRANCH`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`LIBRARY_BRANCH` (
+  `BranchId` INT NOT NULL,
+  `BranchName` VARCHAR(10) NOT NULL,
+  `Address` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`BranchId`),
+  UNIQUE INDEX `Branch_name` (`BranchName` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`BOOK_COPIES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`BOOK_COPIES` (
+  `Book_id` INT NOT NULL,
+  `BranchId` INT NOT NULL,
+  `No_of_copies` INT NOT NULL,
+  PRIMARY KEY (`Book_id`, `BranchId`),
+  INDEX `BOOKCPfkBRANCH` (`BranchId` ASC) VISIBLE,
+  CONSTRAINT `BOOKCPfkBOOK`
+    FOREIGN KEY (`Book_id`)
+    REFERENCES `SAMPLEX`.`BOOK` (`BookId`),
+  CONSTRAINT `BOOKCPfkBRANCH`
+    FOREIGN KEY (`BranchId`)
+    REFERENCES `SAMPLEX`.`LIBRARY_BRANCH` (`BranchId`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`BORROWER`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`BORROWER` (
+  `CardNo` INT NOT NULL,
+  `Name` VARCHAR(20) NOT NULL,
+  `Address` VARCHAR(20) NULL DEFAULT NULL,
+  `Phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`CardNo`),
+  UNIQUE INDEX `Phone` (`Phone` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEX`.`BOOK_LOANS`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEX`.`BOOK_LOANS` (
+  `BookId` INT NOT NULL,
+  `BranchId` INT NOT NULL,
+  `CardNo` INT NOT NULL,
+  `DateOut` DATETIME NOT NULL,
+  `DueDate` DATETIME NOT NULL,
+  PRIMARY KEY (`BookId`, `BranchId`, `CardNo`),
+  INDEX `BOOKLNfkBRANCH` (`BranchId` ASC) VISIBLE,
+  INDEX `BOOKLNfkBORROW` (`CardNo` ASC) VISIBLE,
+  CONSTRAINT `BOOKLNfkBOOK`
+    FOREIGN KEY (`BookId`)
+    REFERENCES `SAMPLEX`.`BOOK` (`BookId`),
+  CONSTRAINT `BOOKLNfkBORROW`
+    FOREIGN KEY (`CardNo`)
+    REFERENCES `SAMPLEX`.`BORROWER` (`CardNo`),
+  CONSTRAINT `BOOKLNfkBRANCH`
+    FOREIGN KEY (`BranchId`)
+    REFERENCES `SAMPLEX`.`LIBRARY_BRANCH` (`BranchId`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+USE `SAMPLEx` ;
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`publisher`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`publisher` (
+  `PName` VARCHAR(20) NOT NULL,
+  `Address` VARCHAR(50) NULL DEFAULT NULL,
+  `Phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`PName`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`book`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`book` (
+  `Book_id` INT NOT NULL,
+  `Title` VARCHAR(20) NOT NULL,
+  `Publisher_name` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`Book_id`),
+  INDEX `BOOKfk` (`Publisher_name` ASC) VISIBLE,
+  CONSTRAINT `BOOKfk`
+    FOREIGN KEY (`Publisher_name`)
+    REFERENCES `SAMPLEx`.`publisher` (`PName`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`book_authors`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`book_authors` (
+  `Book_id` INT NULL DEFAULT NULL,
+  `Author_name` VARCHAR(20) NOT NULL,
+  INDEX `AUTHfk` (`Book_id` ASC) VISIBLE,
+  CONSTRAINT `AUTHfk`
+    FOREIGN KEY (`Book_id`)
+    REFERENCES `SAMPLEx`.`book` (`Book_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`library_branch`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`library_branch` (
+  `Branch_id` INT NOT NULL,
+  `Branch_name` VARCHAR(10) NOT NULL,
+  `Address` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`Branch_id`),
+  UNIQUE INDEX `Branch_name` (`Branch_name` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`book_copies`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`book_copies` (
+  `Book_id` INT NOT NULL,
+  `Branch_id` INT NOT NULL,
+  `No_of_copies` INT NOT NULL,
+  PRIMARY KEY (`Book_id`, `Branch_id`),
+  INDEX `BOOKCPfkBRANCH` (`Branch_id` ASC) VISIBLE,
+  CONSTRAINT `BOOKCPfkBOOK`
+    FOREIGN KEY (`Book_id`)
+    REFERENCES `SAMPLEx`.`book` (`Book_id`),
+  CONSTRAINT `BOOKCPfkBRANCH`
+    FOREIGN KEY (`Branch_id`)
+    REFERENCES `SAMPLEx`.`library_branch` (`Branch_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`borrower`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`borrower` (
+  `Card_no` INT NOT NULL,
+  `Borrower_name` VARCHAR(20) NOT NULL,
+  `Address` VARCHAR(20) NULL DEFAULT NULL,
+  `Phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`Card_no`),
+  UNIQUE INDEX `Phone` (`Phone` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `SAMPLEx`.`book_loans`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SAMPLEx`.`book_loans` (
+  `Book_id` INT NOT NULL,
+  `Branch_id` INT NOT NULL,
+  `Card_no` INT NOT NULL,
+  `Date_out` DATETIME NOT NULL,
+  `Due_date` DATETIME NOT NULL,
+  PRIMARY KEY (`Book_id`, `Branch_id`, `Card_no`),
+  INDEX `BOOKLNfkBRANCH` (`Branch_id` ASC) VISIBLE,
+  INDEX `BOOKLNfkBORROW` (`Card_no` ASC) VISIBLE,
+  CONSTRAINT `BOOKLNfkBOOK`
+    FOREIGN KEY (`Book_id`)
+    REFERENCES `SAMPLEx`.`book` (`Book_id`),
+  CONSTRAINT `BOOKLNfkBORROW`
+    FOREIGN KEY (`Card_no`)
+    REFERENCES `SAMPLEx`.`borrower` (`Card_no`),
+  CONSTRAINT `BOOKLNfkBRANCH`
+    FOREIGN KEY (`Branch_id`)
+    REFERENCES `SAMPLEx`.`library_branch` (`Branch_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
