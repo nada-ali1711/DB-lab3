@@ -1,0 +1,51 @@
+21.
+a.
+Call Count_Emp(Integer) to use the function
+
+b.
+INSERT INTO `DEPT` (`Dnumber`, `Dname`, `Founded`, `Mgr_ssn`, `Budget`) VALUES (111, 'autem',
+'1959-03-23', NULL, '403.642538')
+
+after Calling Procedure the date is correctly adjusted to 1960-01-01
+
+c.
+INSERT INTO `EMPLOYEE` (`Ssn`, `Ename`, `Bdate`, `Dno`, `Salary`) VALUES (99998, 'eveniet',
+'1979-01-31', 102, '59.2833')
+
+If the department has 8 then it gives an error
+Error Code: 1644. ERROR: NO MORE THAN 8 EMPLOYEES!
+
+d.
+Test Case:
+
+SELECT *
+FROM Employee
+WHERE Dno = 102;
+
+UPDATE DEPT
+SET Dnumber = 500
+WHERE Dnumber = 102;
+
+select *
+FROM EMPLOYEE
+WHERE Dno = 500;
+
+e.
+Test Case:
+SELECT *
+FROM EMPLOYEE
+WHERE SSN = 30;
+
+SELECT *
+FROM EMPLOYEE
+WHERE SSN = 2;
+
+call raise_procedure(200, 30);
+
+SELECT *
+FROM EMPLOYEE
+WHERE SSN = 30;
+
+SELECT *
+FROM EMPLOYEE
+WHERE SSN = 2;
