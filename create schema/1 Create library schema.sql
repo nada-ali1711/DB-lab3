@@ -1,5 +1,5 @@
-create schema LIBRARY;
-use LIBRARY;
+create schema SAMPLEx;
+use SAMPLEx;
 
 
 create table PUBLISHER(
